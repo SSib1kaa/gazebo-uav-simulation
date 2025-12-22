@@ -1,0 +1,310 @@
+<?xml version="1.0"?>
+<robot name="quadrotor">
+  <!-- Robot properties -->
+  <property name="mass" value="1.5" />
+  <property name="width" value="0.5" />
+  <property name="height" value="0.2" />
+  <property name="length" value="0.5" />
+  <property name="motor_radius" value="0.04" />
+
+  <!-- Main body (fuselage) -->
+  <link name="base_link">
+    <inertial>
+      <mass value="${mass}" />
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.02" />
+    </inertial>
+    
+    <visual>
+      <geometry>
+        <box size="${length} ${width} ${height}" />
+      </geometry>
+      <material name="body_color">
+        <color rgba="0.2 0.2 0.2 1.0" />
+      </material>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="${length} ${width} ${height}" />
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </collision>
+  </link>
+
+  <!-- IMU Sensor Link -->
+  <link name="imu_link">
+    <inertial>
+      <mass value="0.1" />
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001" />
+    </inertial>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="imu_link" />
+  </joint>
+
+  <!-- Camera Link -->
+  <link name="camera_link">
+    <inertial>
+      <mass value="0.05" />
+      <inertia ixx="0.000001" ixy="0.0" ixz="0.0" iyy="0.000001" iyz="0.0" izz="0.000001" />
+    </inertial>
+    
+    <visual>
+      <geometry>
+        <box size="0.05 0.05 0.05" />
+      </geometry>
+      <material name="camera_color">
+        <color rgba="0.5 0.5 0.5 1.0" />
+      </material>
+      <origin xyz="0.15 0 -0.05" rpy="0 0 0" />
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="0.05 0.05 0.05" />
+      </geometry>
+      <origin xyz="0.15 0 -0.05" rpy="0 0 0" />
+    </collision>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <origin xyz="0.15 0 -0.05" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="camera_link" />
+  </joint>
+
+  <!-- Front-Left Motor -->
+  <link name="motor_fl">
+    <inertial>
+      <mass value="0.08" />
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001" />
+    </inertial>
+    
+    <visual>
+      <geometry>
+        <cylinder radius="${motor_radius}" length="0.02" />
+      </geometry>
+      <material name="motor_color">
+        <color rgba="0.1 0.1 0.1 1.0" />
+      </material>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder radius="${motor_radius}" length="0.02" />
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </collision>
+  </link>
+
+  <joint name="motor_fl_joint" type="revolute">
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="100" lower="-3.14159" upper="3.14159" />
+    <origin xyz="${length/2} ${width/2} ${height/2 + 0.05}" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="motor_fl" />
+  </joint>
+
+  <!-- Front-Right Motor -->
+  <link name="motor_fr">
+    <inertial>
+      <mass value="0.08" />
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001" />
+    </inertial>
+    
+    <visual>
+      <geometry>
+        <cylinder radius="${motor_radius}" length="0.02" />
+      </geometry>
+      <material name="motor_color">
+        <color rgba="0.1 0.1 0.1 1.0" />
+      </material>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder radius="${motor_radius}" length="0.02" />
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </collision>
+  </link>
+
+  <joint name="motor_fr_joint" type="revolute">
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="100" lower="-3.14159" upper="3.14159" />
+    <origin xyz="${length/2} -${width/2} ${height/2 + 0.05}" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="motor_fr" />
+  </joint>
+
+  <!-- Back-Left Motor -->
+  <link name="motor_bl">
+    <inertial>
+      <mass value="0.08" />
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001" />
+    </inertial>
+    
+    <visual>
+      <geometry>
+        <cylinder radius="${motor_radius}" length="0.02" />
+      </geometry>
+      <material name="motor_color">
+        <color rgba="0.1 0.1 0.1 1.0" />
+      </material>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder radius="${motor_radius}" length="0.02" />
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </collision>
+  </link>
+
+  <joint name="motor_bl_joint" type="revolute">
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="100" lower="-3.14159" upper="3.14159" />
+    <origin xyz="-${length/2} ${width/2} ${height/2 + 0.05}" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="motor_bl" />
+  </joint>
+
+  <!-- Back-Right Motor -->
+  <link name="motor_br">
+    <inertial>
+      <mass value="0.08" />
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001" />
+    </inertial>
+    
+    <visual>
+      <geometry>
+        <cylinder radius="${motor_radius}" length="0.02" />
+      </geometry>
+      <material name="motor_color">
+        <color rgba="0.1 0.1 0.1 1.0" />
+      </material>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder radius="${motor_radius}" length="0.02" />
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </collision>
+  </link>
+
+  <joint name="motor_br_joint" type="revolute">
+    <axis xyz="0 0 1" />
+    <limit effort="10" velocity="100" lower="-3.14159" upper="3.14159" />
+    <origin xyz="-${length/2} -${width/2} ${height/2 + 0.05}" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="motor_br" />
+  </joint>
+
+  <!-- Gazebo plugins -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
+  </gazebo>
+
+  <gazebo reference="base_link">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+
+  <!-- IMU sensor plugin -->
+  <gazebo reference="imu_link">
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <imu>
+        <angular_velocity>
+          <x>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.009</stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.009</stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.009</stddev>
+            </noise>
+          </z>
+        </angular_velocity>
+        <linear_acceleration>
+          <x>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.019</stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.019</stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.019</stddev>
+            </noise>
+          </z>
+        </linear_acceleration>
+      </imu>
+    </sensor>
+  </gazebo>
+
+  <!-- Camera sensor plugin -->
+  <gazebo reference="camera_link">
+    <sensor name="camera_sensor" type="camera">
+      <camera>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <always_on>1</always_on>
+      <update_rate>30</update_rate>
+      <visualize>false</visualize>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>30.0</updateRate>
+        <cameraName>quadrotor/camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>
