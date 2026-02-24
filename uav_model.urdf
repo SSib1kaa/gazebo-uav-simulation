@@ -32,7 +32,6 @@
     </collision>
   </link>
 
-  <!-- IMU Sensor Link -->
   <link name="imu_link">
     <inertial>
       <mass value="0.1" />
@@ -77,7 +76,6 @@
     <child link="camera_link" />
   </joint>
 
-  <!-- Front-Left Motor -->
   <link name="motor_fl">
     <inertial>
       <mass value="0.08" />
@@ -110,7 +108,6 @@
     <child link="motor_fl" />
   </joint>
 
-  <!-- Front-Right Motor -->
   <link name="motor_fr">
     <inertial>
       <mass value="0.08" />
@@ -143,7 +140,7 @@
     <child link="motor_fr" />
   </joint>
 
-  <!-- Back-Left Motor -->
+
   <link name="motor_bl">
     <inertial>
       <mass value="0.08" />
@@ -176,7 +173,6 @@
     <child link="motor_bl" />
   </joint>
 
-  <!-- Back-Right Motor -->
   <link name="motor_br">
     <inertial>
       <mass value="0.08" />
@@ -209,7 +205,6 @@
     <child link="motor_br" />
   </joint>
 
-  <!-- Gazebo plugins -->
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
   </gazebo>
@@ -218,7 +213,6 @@
     <material>Gazebo/DarkGrey</material>
   </gazebo>
 
-  <!-- IMU sensor plugin -->
   <gazebo reference="imu_link">
     <sensor name="imu_sensor" type="imu">
       <always_on>true</always_on>
@@ -268,7 +262,6 @@
     </sensor>
   </gazebo>
 
-  <!-- Camera sensor plugin -->
   <gazebo reference="camera_link">
     <sensor name="camera_sensor" type="camera">
       <camera>
