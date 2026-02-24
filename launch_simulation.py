@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-"""
-ROS 2 Launch file for Gazebo UAV simulation
-"""
-
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -12,14 +7,11 @@ import os
 from pathlib import Path
 
 def generate_launch_description():
-    # Get package directory
     pkg_dir = get_package_share_directory('gazebo_uav_simulation')
     
-    # Paths to URDF and world files
     urdf_file = os.path.join(pkg_dir, 'urdf', 'uav_model.urdf')
     world_file = os.path.join(pkg_dir, 'worlds', 'uav_world.world')
     
-    # Declare launch arguments
     use_sim_time = DeclareLaunchArgument(
         'use_sim_time',
         default_value='true',
@@ -32,7 +24,6 @@ def generate_launch_description():
         description='SDF world file'
     )
     
-    # Gazebo Server
     gazebo_server = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory('gazebo_ros'), 'launch', 'gzserver.launch.py')
@@ -40,14 +31,12 @@ def generate_launch_description():
         launch_arguments={'world': world_file}.items(),
     )
     
-    # Gazebo Client
     gazebo_client = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory('gazebo_ros'), 'launch', 'gzclient.launch.py')
         ),
     )
     
-    # Robot State Publisher
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -58,7 +47,6 @@ def generate_launch_description():
         }],
     )
     
-    # Spawn UAV in Gazebo
     spawn_uav = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
@@ -71,8 +59,7 @@ def generate_launch_description():
         ],
         output='screen',
     )
-    
-    # UAV Control Node
+
     uav_controller = Node(
         package='gazebo_uav_simulation',
         executable='uav_controller',
@@ -84,8 +71,7 @@ def generate_launch_description():
             'max_altitude': 100.0,
         }],
     )
-    
-    # IMU Publisher (simulated)
+
     imu_publisher = Node(
         package='gazebo_uav_simulation',
         executable='imu_publisher',
@@ -96,8 +82,7 @@ def generate_launch_description():
             'update_rate': 50.0,
         }],
     )
-    
-    # Camera Publisher (simulated)
+
     camera_publisher = Node(
         package='gazebo_uav_simulation',
         executable='camera_publisher',
@@ -110,16 +95,14 @@ def generate_launch_description():
             'update_rate': 30.0,
         }],
     )
-    
-    # TF Broadcaster for UAV
+
     tf_broadcaster = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         arguments=['0', '0', '0', '0', '0', '0', 'map', 'base_link'],
         output='screen',
     )
-    
-    # Keyboard Teleop (optional)
+
     teleop_node = Node(
         package='gazebo_uav_simulation',
         executable='keyboard_teleop',
@@ -127,8 +110,7 @@ def generate_launch_description():
         output='screen',
         prefix='xterm -e',
     )
-    
-    # RViz for visualization (optional)
+
     rviz_config = os.path.join(pkg_dir, 'rviz', 'uav_config.rviz')
     rviz = Node(
         package='rviz2',
@@ -138,8 +120,7 @@ def generate_launch_description():
         output='screen',
         parameters=[{'use_sim_time': True}],
     )
-    
-    # Create launch description
+
     ld = LaunchDescription([
         use_sim_time,
         world_arg,
@@ -152,7 +133,7 @@ def generate_launch_description():
         camera_publisher,
         tf_broadcaster,
         rviz,
-        # teleop_node,  # Uncomment to enable keyboard control
+
     ])
     
     return ld
